@@ -37,7 +37,9 @@ class Inventory
   def self.supply_product(sku:, quantity:)
     ActiveRecord::Base.transaction do
       store = Store.first
-        # TODO
+      product = store.products.lock.where(sku:).first!
+      product.quantity_available += quantity
+      product.save!
     end
   end
 
