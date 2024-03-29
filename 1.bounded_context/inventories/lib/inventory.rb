@@ -45,8 +45,23 @@ class Inventory
 
   def self.reserve_products(order_number:, products:)
     ActiveRecord::Base.transaction do
-      store = Store.first
-        # TODO
+      store = Store.lock.first
+      raise Error, 'error' if store.shipments.where(state: 'reserved').count >= 4
+
+      shipment = Shipment.new
+      shipment.order_number = order_number
+      shipment.store_id = store.id
+      shipment.products = products
+      shipment.state = 'reserved'
+      shipment.save!
+
+      shipment.products.each do |sku, quantity|
+        product = store.products.where(store_id: store.id, sku:).first!
+        product.quantity_available -= quantity
+        product.quantity_shipped += quantity
+        raise Error, 'error' if product.quantity_available < 0
+        product.save!
+      end
     end
   end
 
