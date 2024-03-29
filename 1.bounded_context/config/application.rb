@@ -19,6 +19,7 @@ module CqrsEsSampleWithResNew
     config.paths.add 'orders/lib',           eager_load: true
     config.paths.add 'payments/lib',         eager_load: true
     config.paths.add 'discounts/lib',        eager_load: true
+    config.paths.add 'inventories/lib',      eager_load: true
 
     config.event_store = RailsEventStore::Client.new
 

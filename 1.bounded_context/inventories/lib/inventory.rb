@@ -1,5 +1,8 @@
 # inventory/lib/inventory.rb
 class Inventory
+  class Error < Standard::Error
+  end
+  
   class Product < ActiveRecord::Base
     self.table_name = "inventory_products"
   end
@@ -26,7 +29,7 @@ class Inventory
   def self.register_product(sku:)
     ActiveRecord::Base.transaction do
       store = Store.first
-        # TODO 
+      store.products.create!(sku:, quantity_available: 0, quantity_reserved: 0, quantity_shipped: 0)
     end
   end
 
