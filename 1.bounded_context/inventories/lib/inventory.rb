@@ -68,7 +68,18 @@ class Inventory
   def self.ship_products(order_number:)
     ActiveRecord::Base.transaction do
       store = Store.first
-        # TODO
+      
+      shipment = Shipment.where(order_number:).first!
+      shipment.products.each do |sku, quantity|
+        product = store.products.lock.where(store_id: store.id, sku:).first!
+        product.quantity_reserved -= quantity
+        product.quantity_shipped += quantity
+        raise Error, 'error' if product.quantity_reserved < 0
+        product.save!
+      end
+
+      shipment.state = 'shipped'
+      shipment.save!
     end
   end
 
