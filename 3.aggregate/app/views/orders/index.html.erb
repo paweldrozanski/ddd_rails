@@ -1,0 +1,41 @@
+<% provide(:title, 'Your orders') %>
+<p id="notice"><%= notice %></p>
+
+<h1>Orders</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Number</th>
+      <th>Items count</th>
+      <th>Net value</th>
+      <th>Vat amount</th>
+      <th>Gross value</th>
+      <th>Customer name</th>
+      <th>State</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.number %></td>
+        <td><%= order.items_count %></td>
+        <td><%= order.net_value %></td>
+        <td><%= order.vat_amount %></td>
+        <td><%= order.gross_value %></td>
+        <td><%= order.customer_name %></td>
+        <td><%= order.state %></td>
+        <td><%= link_to 'Pay', order_pay_path(order), class: 'btn btn-default' %></td>
+        <td><%= link_to 'Ship', order_ship_path(order), method: :post, class: 'btn btn-default' %></td>
+        <td><%= link_to 'Cancel', order_path(order), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default' %></td>
+        <td><%= link_to 'History', order_path(order), class: 'btn btn-default' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Order', new_order_path, class: 'btn btn-default' %>
