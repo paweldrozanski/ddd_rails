@@ -42,7 +42,7 @@ SchoolYear = Struct.new(:start_year, :end_year) do
   end
 
   def prev
-    self.class.new(start_year.prev, end_year.prev)
+    self.class.new(start_year.pred, end_year.pred)
   end
 
   def starts_at
