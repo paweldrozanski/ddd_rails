@@ -42,6 +42,23 @@ RSpec.describe SchoolYear do
     end
   end
 
+  describe '#current' do
+    context 'date is before 1.8' do
+      subject { described_class.from_date(Date.new(2000, 7, 31)) }
+      it { expect(subject).to eq(SchoolYear.new(1999, 2000)) }
+    end
+
+    context 'date is after 1.8' do
+      subject { described_class.from_date(Date.new(2000, 8, 1)) }
+      it { expect(subject).to eq(SchoolYear.new(2000, 2001)) }
+    end
+  end
+
+  describe '#name' do
+    subject { described_class.new(2000, 2001) }
+    it { expect(subject.name).to eq('2000/2001') }
+  end
+
   describe '#next' do
     subject { described_class.new(2000, 2001) }
     it { expect(subject.next).to eq(SchoolYear.new(2001, 2002)) }
