@@ -30,7 +30,12 @@ class Inventory
     has_many :shipments, autosave: true
 
     def register_product(sku:)
-      # TODO
+      products.build(
+        sku: sku,
+        quantity_available: 0,
+        quantity_reserved: 0,
+        quantity_shipped: 0
+      )
     end
 
     def supply_product(sku:, quantity:)
