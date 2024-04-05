@@ -61,7 +61,19 @@ class Inventory
     end
 
     def ship_products(order_number:)
-      # TODO
+      shipment = shipments.find { |s| s.order_number == order_number && s.state == 'reserved' }
+      shipment.products.each do |sku, quantity_to_ship|
+        reserved = products.find { |p| p.sku == sku }.quantity_reserved
+        raise Inventory::Error if reserved < quantity_to_ship
+      end
+
+      shipment.products.each do |sku, quantity_to_ship|
+        product = products.find { |p| p.sku == sku }
+        product.quantity_reserved -= quantity_to_ship
+        product.quantity_shipped += quantity_to_ship
+      end
+
+      shipment.state = 'shipped'
     end
   end
 
