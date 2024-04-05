@@ -43,7 +43,21 @@ class Inventory
     end
 
     def reserve_products(order_number:, products:)
-      # TODO
+      too_many_reserved = shipments.select { |s| s.state == 'reserved' }.size > 4
+      raise Inventory::Error, 'Too many reserved shipments' if too_many_reserved
+
+      products.each do |sku, quantity_to_reserve|
+        available = self.products.find { |p| p.sku == sku }.quantity_available
+        raise Inventory::Error, 'Not enough quantity available' if available < quantity_to_reserve
+      end
+
+      shipments.build(order_number: order_number, state: 'reserved', products: products)
+
+      products.each do |sku, quantity_to_reserve|
+        product = self.products.find { |p| p.sku == sku }
+        product.quantity_available -= quantity_to_reserve
+        product.quantity_reserved += quantity_to_reserve
+      end
     end
 
     def ship_products(order_number:)
