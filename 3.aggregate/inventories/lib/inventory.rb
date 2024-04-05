@@ -39,7 +39,7 @@ class Inventory
     end
 
     def supply_product(sku:, quantity:)
-      # TODO
+      products.find { |p| p.sku == sku }.quantity_available += quantity
     end
 
     def reserve_products(order_number:, products:)
